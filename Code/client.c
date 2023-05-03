@@ -3,7 +3,10 @@
 #include <string.h>
 #include <unistd.h>
 #include <arpa/inet.h>
+#include <time.h>
 #include <sys/socket.h>
+#include <sys/types.h>
+#include <signal.h>
 #include <netinet/in.h>
 
 int main(int argc, char *argv[]) {
@@ -24,9 +27,14 @@ int main(int argc, char *argv[]) {
     strcat(dst_dir, "/Backups/");
     strcat(dst_dir, src_dir);
 
-    int sock = 0, valread;
+    int sock = 0;
     struct sockaddr_in serv_addr;
     char buffer[1024];
+
+    time_t now = time(NULL);
+    char date[50];
+
+    FILE *file;
 
     if ((sock = socket(AF_INET, SOCK_STREAM, 0)) < 0) {
         printf("\n Socket creation error \n");
@@ -63,7 +71,15 @@ int main(int argc, char *argv[]) {
         send(sock, buffer, bytes_read, 0);
     }
 
-
     printf("File transfer complete\n");
+
+    uid_t uid = getuid();
+
+    file = fopen("../Logs/output.txt", "ab");
+    strftime(date, sizeof(date), "%a %b %d %T %Y", localtime(&now));
+    fprintf(file, "%s: %s moved from /%s to ../Backup/%s by user: %d\n", date, filename, src_dir, src_dir, uid);
+    fclose(file);
+
     return 0;
+
 }

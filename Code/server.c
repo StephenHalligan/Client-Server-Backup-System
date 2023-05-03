@@ -64,10 +64,10 @@ int main(int argc, char const *argv[]) {
     // Create destination directory
     char backup_dir[2048];
 
-    if (mkdir("Backup/", 0777) == -1) {
+    if (mkdir("../Backup/", 0777) == -1) {
 
     }
-    snprintf(backup_dir, sizeof(backup_dir), "Backup/%s/", buffer);
+    snprintf(backup_dir, sizeof(backup_dir), "../Backup/%s/", buffer);
 
     if (mkdir(backup_dir, 0777) == -1) {
         printf("Backup directory found!\n");
@@ -79,37 +79,25 @@ int main(int argc, char const *argv[]) {
         perror("recv");
         exit(EXIT_FAILURE);
     }
-    printf("Backup file received: %s\n", buffer);
-
-    // Create file path from destination directory and file name
-    char filepath[2048];
-    snprintf(filepath, sizeof(filepath), "%s/%s", backup_dir, buffer);
-
-    // Create file with read and write permissions for all users
-    int fd = open(filepath, O_WRONLY | O_CREAT | O_TRUNC, S_IRUSR | S_IWUSR | S_IRGRP | S_IWGRP | S_IROTH | S_IWOTH);
-    if (fd == -1) {
-        perror("open");
-        exit(EXIT_FAILURE);
-    }
+    printf("Backup file name received: %s\n", buffer);
 
     // Receive file contents from client and write to file
     char file_buffer[1024];
     ssize_t bytes_read;
     while ((bytes_read = recv(new_socket, file_buffer, sizeof(file_buffer), 0)) > 0) {
+        // Create file with read and write permissions for all users
+        int fd = open(strcat(backup_dir, buffer), O_WRONLY | O_CREAT | O_APPEND, S_IRUSR | S_IWUSR | S_IRGRP | S_IWGRP | S_IROTH | S_IWOTH);
+        if (fd == -1) {
+            perror("open");
+            exit(EXIT_FAILURE);
+        }
         if (write(fd, file_buffer, bytes_read) == -1) {
             perror("write");
             exit(EXIT_FAILURE);
         }
         memset(file_buffer, 0, sizeof(file_buffer));
+        close(fd);
+        return 0;
+    }
     }
 
-
-    printf("File transfer complete\n");
-
-    // Close file and socket
-    close(fd);
-    close(new_socket);
-    close(server_fd);
-
-    return 0;
-}
