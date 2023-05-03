@@ -1,2 +1,20 @@
-Thu Apr 27 20:34:22 2023: file.txt moved from Distribution to ../Backup/Distribution by user: 1000
-Thu Apr 27 20:34:30 2023: file.txt moved from Distribution to ../Backup/Distribution by user: 1000
+Wed May 03 13:06:38 2023
+Client: User '1003' (admin) sent 'file.txt' from /Manufacturing/
+Server: File received and saved to ../.Backup/Manufacturing/file.txt
+Server: Transfer complete, terminating connection.
+
+Wed May 03 13:16:51 2023
+Client: User '1001' (manufacturing) sent 'file.txt' from /Manufacturing/
+Server: File received and saved to ../.Backup/Manufacturing/file.txt
+Server: Transfer complete, terminating connection.
+
+
+Wed May 03 13:25:43 2023
+Client: User '1001' (manufacturing) sent 'file.txt' from /Manufacturing/
+Server: File received and saved to ../.Backup/Manufacturing/file.txt
+Server: Transfer complete, terminating connection.
+
+Wed May 03 13:27:08 2023
+Client: User '1001' (manufacturing) sent 'file.txt' from /Manufacturing/
+Server: File received and saved to ../.Backup/Manufacturingfile.txté/
+Server: Transfer complete, terminating connection.
